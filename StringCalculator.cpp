@@ -19,23 +19,15 @@ int StringCalculator::add(const std::string& numbers)
 
 std::vector<int> StringCalculator::parseNumbers(const std::string& numbers)
 {
-    // Check for disallowed input pattern "1,\n"
-    if (std::regex_search(numbers, std::regex(",\\n$")))
-    {
-        throw std::invalid_argument("Input ending with ',\\n' is not allowed.");
-    }
-
     std::vector<int> parsedNumbers;
-    std::regex re("[\\n,]"); // Split on newline or comma
-    std::sregex_token_iterator it(numbers.begin(), numbers.end(), re, -1);
-    std::sregex_token_iterator reg_end;
+    std::regex numberPattern("(-?\\d+)");
+    auto numbersBegin = std::sregex_iterator(numbers.begin(), numbers.end(), numberPattern);
+    auto numbersEnd = std::sregex_iterator();
 
-    for (; it != reg_end; ++it)
+    for (std::sregex_iterator i = numbersBegin; i != numbersEnd; ++i)
     {
-        if (!it->str().empty()) // Ignore empty tokens
-        {
-            parsedNumbers.push_back(std::stoi(it->str()));
-        }
+        std::smatch match = *i;
+        parsedNumbers.push_back(std::stoi(match.str()));
     }
 
     return parsedNumbers;
