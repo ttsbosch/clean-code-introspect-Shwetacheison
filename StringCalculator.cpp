@@ -22,10 +22,7 @@ std::vector<int> StringCalculator::parseNumbers(const std::string& numbers)
     while (std::getline(stream, token, ','))
     {
         int number = std::stoi(token);
-        if (number <= 1000) // Ignore numbers greater than 1000
-        {
-            parsedNumbers.push_back(number);
-        }
+        parsedNumbers.push_back(number);
     }
     return parsedNumbers;
 }
@@ -36,18 +33,10 @@ int StringCalculator::parseAndSum(const std::string& numbers, std::vector<int>& 
     int sum = 0;
     for (int number : parsedNumbers)
     {
-        if (isValidNumber(number, negatives))
-        {
-            sum += number;
-        }
+        collectNegatives(number, negatives);
+        sum += std::max(number, 0); // Only add non-negative numbers
     }
     return sum;
-}
-
-bool StringCalculator::isValidNumber(int number, std::vector<int>& negatives)
-{
-    collectNegatives(number, negatives);
-    return number > 0 && number <= 1000;
 }
 
 void StringCalculator::collectNegatives(int number, std::vector<int>& negatives)
@@ -67,6 +56,6 @@ void StringCalculator::throwErrorIfNegatives(const std::vector<int>& negatives)
             negatives.end(),
             "negatives not allowed: " + std::to_string(negatives[0]), // Initial value
             [](const std::string& acc, int n) { return acc + ", " + std::to_string(n); });
-        throw std::runtime_error(errorMessage);
+        throw std::invalid_argument(errorMessage);
     }
 }
