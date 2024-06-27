@@ -39,13 +39,18 @@ int StringCalculator::parseAndSum(const std::string& numbers, std::vector<int>& 
     int sum = 0;
     for (int number : parsedNumbers)
     {
-        if (number < 0) {
-            negatives.push_back(number);
-        } else if (number <= 1000) {
+        if (isValidNumber(number, negatives))
+        {
             sum += number;
         }
     }
     return sum;
+}
+
+bool StringCalculator::isValidNumber(int number, std::vector<int>& negatives)
+{
+    collectNegatives(number, negatives);
+    return number > 0 && number <= 1000;
 }
 
 void StringCalculator::collectNegatives(int number, std::vector<int>& negatives)
