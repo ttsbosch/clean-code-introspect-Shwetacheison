@@ -7,6 +7,11 @@ int StringCalculator::add(const std::string& numbers)
         return 0;
     }
 
+    if (numbers.back() == ',' || numbers.back() == '\n')
+    {
+        throw std::invalid_argument("Invalid input format");
+    }
+
     std::vector<int> negatives;
     int sum = parseAndSum(numbers, negatives);
     throwErrorIfNegatives(negatives);
@@ -16,14 +21,21 @@ int StringCalculator::add(const std::string& numbers)
 
 std::vector<int> StringCalculator::parseNumbers(const std::string& numbers)
 {
-    std::istringstream stream(numbers);
+    std::string modifiedNumbers = numbers;
+    std::replace(modifiedNumbers.begin(), modifiedNumbers.end(), '\n', ','); // Replace newlines with commas
+    std::istringstream stream(modifiedNumbers);
     std::string token;
     std::vector<int> parsedNumbers;
+
     while (std::getline(stream, token, ','))
     {
-        int number = std::stoi(token);
-        parsedNumbers.push_back(number);
+        if (!token.empty())
+        { // Skip empty tokens
+            int number = std::stoi(token);
+            parsedNumbers.push_back(number);
+        }
     }
+
     return parsedNumbers;
 }
 
@@ -33,6 +45,10 @@ int StringCalculator::parseAndSum(const std::string& numbers, std::vector<int>& 
     int sum = 0;
     for (int number : parsedNumbers)
     {
+        if (number > 1000)
+        {
+            continue; // Skip numbers greater than 1000
+        }
         collectNegatives(number, negatives);
         sum += std::max(number, 0); // Only add non-negative numbers
     }
@@ -56,6 +72,6 @@ void StringCalculator::throwErrorIfNegatives(const std::vector<int>& negatives)
             negatives.end(),
             "negatives not allowed: " + std::to_string(negatives[0]), // Initial value
             [](const std::string& acc, int n) { return acc + ", " + std::to_string(n); });
-        throw std::invalid_argument(errorMessage);
+        throw std::runtime_error(errorMessage);
     }
 }
