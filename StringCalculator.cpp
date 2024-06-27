@@ -58,6 +58,6 @@ void StringCalculator::throwErrorIfNegatives(const std::vector<int>& negatives)
             negatives.end(),
             "negatives not allowed: " + std::to_string(negatives[0]), // Initial value
             [](const std::string& acc, int n) { return acc + ", " + std::to_string(n); });
-        throw std::invalid_argument(errorMessage);
+        throw std::runtime_error(errorMessage);
     }
 }
