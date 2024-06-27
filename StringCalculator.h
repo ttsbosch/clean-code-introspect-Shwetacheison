@@ -13,6 +13,8 @@ class StringCalculator
     int add(const std::string& numbers);
 
   private:
+    std::pair<std::string, std::string> extractDelimiterAndNumbers(const std::string& numbers);
+    std::string replaceDelimiter(const std::string& numbersPart, const std::string& delimiter);
     void validateInputFormat(const std::string& numbers);
     std::vector<int> parseNumbers(const std::string& numbers);
     int parseAndSum(const std::string& numbers, std::vector<int>& negatives);
