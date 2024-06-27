@@ -1,22 +1,22 @@
 #include "StringCalculator.h"
 
-int StringCalculator::add(const std::string& numbers)
-{
-    if (numbers.empty())
-    {
+int StringCalculator::add(const std::string& numbers) {
+    if (numbers.empty()) {
         return 0;
     }
 
-    if (numbers.back() == ',' || numbers.back() == '\n')
-    {
-        throw std::invalid_argument("Invalid input format");
-    }
+    validateInputFormat(numbers);
 
     std::vector<int> negatives;
     int sum = parseAndSum(numbers, negatives);
     throwErrorIfNegatives(negatives);
 
     return sum;
+}
+void StringCalculator::validateInputFormat(const std::string& numbers) {
+    if (numbers.back() == ',' || numbers.back() == '\n') {
+        throw std::invalid_argument("Invalid input format");
+    }
 }
 
 std::vector<int> StringCalculator::parseNumbers(const std::string& numbers)
