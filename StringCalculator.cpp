@@ -1,6 +1,7 @@
 #include "StringCalculator.h"
 #include <algorithm>
 #include <numeric>
+#include <regex>
 
 int StringCalculator::add(const std::string& numbers)
 {
@@ -18,14 +19,25 @@ int StringCalculator::add(const std::string& numbers)
 
 std::vector<int> StringCalculator::parseNumbers(const std::string& numbers)
 {
-    std::istringstream stream(numbers);
-    std::string token;
-    std::vector<int> parsedNumbers;
-    while (std::getline(stream, token, ','))
+    // Check for disallowed input pattern "1,\n"
+    if (std::regex_search(numbers, std::regex(",\\n$")))
     {
-        int number = std::stoi(token);
-        parsedNumbers.push_back(number);
+        throw std::invalid_argument("Input ending with ',\\n' is not allowed.");
     }
+
+    std::vector<int> parsedNumbers;
+    std::regex re("[\\n,]"); // Split on newline or comma
+    std::sregex_token_iterator it(numbers.begin(), numbers.end(), re, -1);
+    std::sregex_token_iterator reg_end;
+
+    for (; it != reg_end; ++it)
+    {
+        if (!it->str().empty()) // Ignore empty tokens
+        {
+            parsedNumbers.push_back(std::stoi(it->str()));
+        }
+    }
+
     return parsedNumbers;
 }
 
