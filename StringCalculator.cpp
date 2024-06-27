@@ -14,14 +14,25 @@ int StringCalculator::add(const std::string& numbers)
     return sum;
 }
 
-int StringCalculator::parseAndSum(const std::string& numbers, std::vector<int>& negatives)
+std::vector<int> StringCalculator::parseNumbers(const std::string& numbers)
 {
     std::istringstream stream(numbers);
     std::string token;
-    int sum = 0;
+    std::vector<int> parsedNumbers;
     while (std::getline(stream, token, ','))
     {
         int number = std::stoi(token);
+        parsedNumbers.push_back(number);
+    }
+    return parsedNumbers;
+}
+
+int StringCalculator::parseAndSum(const std::string& numbers, std::vector<int>& negatives)
+{
+    std::vector<int> parsedNumbers = parseNumbers(numbers);
+    int sum = 0;
+    for (int number : parsedNumbers)
+    {
         collectNegatives(number, negatives);
         sum += std::max(number, 0); // Only add non-negative numbers
     }
