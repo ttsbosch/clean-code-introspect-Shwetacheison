@@ -1,20 +1,48 @@
 #include "StringCalculator.h"
+#include <algorithm>
+#include <numeric>
+#include <sstream>
+#include <vector>
 
-int StringCalculator::add(const std::string& numbers) {
-    if (numbers.empty()) {
+int StringCalculator::add(const std::string& numbers)
+{
+    if (numbers.empty())
+    {
         return 0;
     }
 
-    validateInputFormat(numbers);
+    std::string delimiter = ",";
+    std::string numbersPart = numbers;
+
+    // Check for custom delimiter
+    if (numbers.substr(0, 2) == "//")
+    {
+        size_t delimiterEndPos = numbers.find('\n');
+        delimiter = numbers.substr(2, delimiterEndPos - 2);
+        numbersPart = numbers.substr(delimiterEndPos + 1);
+    }
+
+    // Replace custom delimiter with default delimiter to simplify splitting
+    size_t pos = 0;
+    while ((pos = numbersPart.find(delimiter, pos)) != std::string::npos)
+    {
+        numbersPart.replace(pos, delimiter.length(), ",");
+        pos += 1; // Move past the replaced delimiter
+    }
+
+    validateInputFormat(numbersPart);
 
     std::vector<int> negatives;
-    int sum = parseAndSum(numbers, negatives);
+    int sum = parseAndSum(numbersPart, negatives);
     throwErrorIfNegatives(negatives);
 
     return sum;
 }
-void StringCalculator::validateInputFormat(const std::string& numbers) {
-    if (numbers.back() == ',' || numbers.back() == '\n') {
+
+void StringCalculator::validateInputFormat(const std::string& numbers)
+{
+    if (numbers.back() == ',' || numbers.back() == '\n')
+    {
         throw std::invalid_argument("Invalid input format");
     }
 }
