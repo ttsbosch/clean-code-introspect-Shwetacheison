@@ -1,6 +1,6 @@
 #include "StringCalculator.h"
 int StringCalculator::add(string numbers){
-if(numbers.empty)
+if(numbers=="")
 {
 return 0;
 }
