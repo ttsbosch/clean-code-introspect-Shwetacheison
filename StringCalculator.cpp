@@ -1,7 +1,4 @@
 #include "StringCalculator.h"
-#include <algorithm>
-#include <numeric>
-#include <regex>
 
 int StringCalculator::add(const std::string& numbers)
 {
