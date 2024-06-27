@@ -4,6 +4,33 @@
 #include <sstream>
 #include <vector>
 
+// Extracts delimiter and updates numbers string
+std::pair<std::string, std::string> extractDelimiterAndNumbers(const std::string& numbers)
+{
+    std::string delimiter = ",";
+    std::string numbersPart = numbers;
+    if (numbers.substr(0, 2) == "//")
+    {
+        size_t delimiterEndPos = numbers.find('\n');
+        delimiter = numbers.substr(2, delimiterEndPos - 2);
+        numbersPart = numbers.substr(delimiterEndPos + 1);
+    }
+    return {delimiter, numbersPart};
+}
+
+// Replaces all occurrences of the custom delimiter in the numbers string with a common delimiter
+std::string replaceDelimiter(const std::string& numbersPart, const std::string& delimiter)
+{
+    std::string modifiedNumbers = numbersPart;
+    size_t pos = 0;
+    while ((pos = modifiedNumbers.find(delimiter, pos)) != std::string::npos)
+    {
+        modifiedNumbers.replace(pos, delimiter.length(), ",");
+        pos += delimiter.length(); // Adjust for the length of the delimiter
+    }
+    return modifiedNumbers;
+}
+
 int StringCalculator::add(const std::string& numbers)
 {
     if (numbers.empty())
@@ -11,24 +38,8 @@ int StringCalculator::add(const std::string& numbers)
         return 0;
     }
 
-    std::string delimiter = ",";
-    std::string numbersPart = numbers;
-
-    // Check for custom delimiter
-    if (numbers.substr(0, 2) == "//")
-    {
-        size_t delimiterEndPos = numbers.find('\n');
-        delimiter = numbers.substr(2, delimiterEndPos - 2);
-        numbersPart = numbers.substr(delimiterEndPos + 1);
-    }
-
-    // Replace custom delimiter with default delimiter to simplify splitting
-    size_t pos = 0;
-    while ((pos = numbersPart.find(delimiter, pos)) != std::string::npos)
-    {
-        numbersPart.replace(pos, delimiter.length(), ",");
-        pos += 1; // Move past the replaced delimiter
-    }
+    auto [delimiter, numbersPart] = extractDelimiterAndNumbers(numbers);
+    numbersPart = replaceDelimiter(numbersPart, delimiter);
 
     validateInputFormat(numbersPart);
 
@@ -38,6 +49,8 @@ int StringCalculator::add(const std::string& numbers)
 
     return sum;
 }
+
+// Other methods remain unchanged
 
 void StringCalculator::validateInputFormat(const std::string& numbers)
 {
