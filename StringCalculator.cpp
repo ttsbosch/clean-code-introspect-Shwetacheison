@@ -1,15 +1,43 @@
 #include "StringCalculator.h"
 #include <sstream>
-int StringCalculator::add(string numbers){
-if (numbers=="") {
-            return 0;
-        }
+#include <stdexcept>
+int StringCalculator::add(string numbers)
+{
+  if (numbers.empty())
+  {
+     return 0;
+  }
 
-        istringstream stream(numbers);
-        string token;
-        int sum = 0;
-        while (getline(stream, token, ',')) {
-            sum += stoi(token);
+  std::istringstream stream(numbers);
+  std::string token;
+  int sum = 0;
+  std::vector<int> negatives;
+  while (std::getline(stream, token, ','))
+  {
+    int number = std::stoi(token);
+    if (number < 0) 
+    {
+      negatives.push_back(number);
+    } 
+    else 
+    {
+      sum += number;
+    }
+  }
+
+  if (!negatives.empty())
+  {
+    std::ostringstream msg;
+    msg << "negatives not allowed: ";
+    for (size_t i = 0; i < negatives.size(); ++i) 
+    {
+      if (i > 0) 
+      {
+        msg << ", ";
+      }
+      msg << negatives[i];
+    }
+    throw std::invalid_argument(msg.str());
         }
 
         return sum;
