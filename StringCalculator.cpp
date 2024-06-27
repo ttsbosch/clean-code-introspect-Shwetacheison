@@ -19,17 +19,17 @@ int StringCalculator::add(const std::string& numbers)
 
 std::vector<int> StringCalculator::parseNumbers(const std::string& numbers)
 {
+    std::istringstream stream(numbers);
+    std::string token;
     std::vector<int> parsedNumbers;
-    std::regex numberPattern("(-?\\d+)");
-    auto numbersBegin = std::sregex_iterator(numbers.begin(), numbers.end(), numberPattern);
-    auto numbersEnd = std::sregex_iterator();
-
-    for (std::sregex_iterator i = numbersBegin; i != numbersEnd; ++i)
+    while (std::getline(stream, token, ','))
     {
-        std::smatch match = *i;
-        parsedNumbers.push_back(std::stoi(match.str()));
+        int number = std::stoi(token);
+        if (number <= 1000) // Ignore numbers greater than 1000
+        {
+            parsedNumbers.push_back(number);
+        }
     }
-
     return parsedNumbers;
 }
 
@@ -39,9 +39,16 @@ int StringCalculator::parseAndSum(const std::string& numbers, std::vector<int>& 
     int sum = 0;
     for (int number : parsedNumbers)
     {
-        collectNegatives(number, negatives);
-        sum += std::max(number, 0); // Only add non-negative numbers
+        if (number < 0)
+        {
+            negatives.push_back(number);
+        }
+        else
+        {
+            sum += number; // Numbers greater than 1000 are already filtered out
+        }
     }
+    throwErrorIfNegatives(negatives);
     return sum;
 }
 
