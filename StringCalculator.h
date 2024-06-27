@@ -16,7 +16,6 @@ class StringCalculator
   private:
     std::vector<int> parseNumbers(const std::string& numbers);
     int parseAndSum(const std::string& numbers, std::vector<int>& negatives);
-    bool isValidNumber(int number, std::vector<int>& negatives);
     void collectNegatives(int number, std::vector<int>& negatives);
     void throwErrorIfNegatives(const std::vector<int>& negatives);
 };
