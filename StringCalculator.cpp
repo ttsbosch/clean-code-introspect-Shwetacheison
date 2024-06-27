@@ -1,6 +1,7 @@
 #include "StringCalculator.h"
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 int StringCalculator::add(string numbers)
 {
   if (numbers.empty())
@@ -38,7 +39,6 @@ int StringCalculator::add(string numbers)
       msg << negatives[i];
     }
     throw std::invalid_argument(msg.str());
-        }
-
-        return sum;
+  }
+return sum;
 }
