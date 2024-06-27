@@ -1,4 +1,6 @@
 #include "StringCalculator.h"
+#include <algorithm>
+#include <numeric>
 
 int StringCalculator::add(const std::string& numbers)
 {
@@ -51,12 +53,11 @@ void StringCalculator::throwErrorIfNegatives(const std::vector<int>& negatives)
 {
     if (!negatives.empty())
     {
-        std::ostringstream msg;
-        msg << "negatives not allowed: ";
-        for (size_t i = 0; i < negatives.size(); ++i)
-        {
-            msg << (i > 0 ? ", " : "") << negatives[i];
-        }
-        throw std::invalid_argument(msg.str());
+        auto errorMessage = std::accumulate(
+            std::next(negatives.begin()),
+            negatives.end(),
+            "negatives not allowed: " + std::to_string(negatives[0]), // Initial value
+            [](const std::string& acc, int n) { return acc + ", " + std::to_string(n); });
+        throw std::invalid_argument(errorMessage);
     }
 }
