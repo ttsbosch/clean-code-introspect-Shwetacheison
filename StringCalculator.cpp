@@ -39,16 +39,12 @@ int StringCalculator::parseAndSum(const std::string& numbers, std::vector<int>& 
     int sum = 0;
     for (int number : parsedNumbers)
     {
-        if (number < 0)
-        {
+        if (number < 0) {
             negatives.push_back(number);
-        }
-        else
-        {
-            sum += number; // Numbers greater than 1000 are already filtered out
+        } else if (number <= 1000) {
+            sum += number;
         }
     }
-    throwErrorIfNegatives(negatives);
     return sum;
 }
 
