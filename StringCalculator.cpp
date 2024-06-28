@@ -38,7 +38,9 @@ int StringCalculator::add(const std::string& numbers)
         return 0;
     }
 
-    auto [delimiter, numbersPart] = extractDelimiterAndNumbers(numbers);
+    auto delimiterAndNumbers = extractDelimiterAndNumbers(numbers);
+    std::string delimiter = delimiterAndNumbers.first;
+    std::string numbersPart = delimiterAndNumbers.second;
     numbersPart = replaceDelimiter(numbersPart, delimiter);
 
     validateInputFormat(numbersPart);
